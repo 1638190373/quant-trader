@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="400" viewBox="0 0 720 400" font-family="Microsoft YaHei, sans-serif">
+  <rect width="720" height="400" fill="#ffffff"/>
+  <text x="360" y="30" text-anchor="middle" font-size="17" fill="#222">策略在找什么形态：跌破下轨 → 收回下轨 → 买入</text>
+
+  <!-- 布林带 -->
+  <path d="M40,150 C240,150 440,160 680,170" fill="none" stroke="#9db8d9" stroke-width="2"/>
+  <path d="M40,190 C240,195 440,205 680,222" fill="none" stroke="#c9c9c9" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M40,230 C240,240 440,255 680,278" fill="none" stroke="#9db8d9" stroke-width="2"/>
+  <text x="44" y="142" font-size="13" fill="#6f92bd">上轨</text>
+  <text x="44" y="184" font-size="13" fill="#999">中轨（20期均价）</text>
+  <text x="44" y="246" font-size="13" fill="#6f92bd">下轨</text>
+
+  <!-- 股价 -->
+  <polyline points="40,200 100,210 160,195 220,215 280,205 340,222 400,210 460,235 500,250 540,280 560,300 600,285 650,262 680,250"
+            fill="none" stroke="#333" stroke-width="2.5"/>
+  <text x="688" y="245" font-size="13" fill="#333" text-anchor="end" dy="-18">股价</text>
+
+  <!-- 昨天标记 -->
+  <line x1="560" y1="60" x2="560" y2="340" stroke="#e06666" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <circle cx="560" cy="300" r="7" fill="none" stroke="#e06666" stroke-width="2.5"/>
+  <text x="560" y="330" text-anchor="middle" font-size="13" fill="#e06666">① 昨天收盘跌破下轨（超跌）</text>
+
+  <!-- 今天标记 -->
+  <line x1="650" y1="60" x2="650" y2="340" stroke="#38b000" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <polygon points="650,272 644,258 656,258" fill="#38b000"/>
+  <text x="650" y="352" text-anchor="middle" font-size="13" fill="#38b000">② 今天14:55 收回下轨上方 → 买入</text>
+
+  <text x="360" y="385" text-anchor="middle" font-size="13" fill="#777">之后：反弹冲过上轨又跌回 → 清仓卖出</text>
+</svg>
