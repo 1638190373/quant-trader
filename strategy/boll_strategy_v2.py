@@ -60,6 +60,16 @@ def initialize(context):
     # ★ 修复bug①：注册每日14:55定时任务，这行必须生效
     run_daily(check_signals, time='14:55')
 
+    # D6：A股交易制度约束——被拦下的订单计数器
+    g.blocked_buy = 0    # 涨停不追买
+    g.blocked_sell = 0   # 跌停卖不出
+    run_daily(report_blocked, time='15:30')
+
+
+def report_blocked(context):
+    """收盘后汇报：累计被拦订单数（计划D6要求的'打印被拦下的订单数'）"""
+    log.info(f"📊 累计拦截 | 涨停不追买: {g.blocked_buy} 笔 | 跌停卖不出: {g.blocked_sell} 笔")
+
 
 def check_signals(context):
     """每天14:55对股票池跑一遍"""
@@ -106,6 +116,11 @@ def check_signals(context):
 
         # ============ 卖出（先判卖再判买，避免同一轮买卖打架） ============
         if pos is not None and pos.total_amount > 0:
+            # D6: 跌停卖不出——现价已打到跌停价，挂单也成交不了，跳过并计数
+            if t_price <= current_data[stock].low_limit:
+                g.blocked_sell += 1
+                log.info(f"🚫 跌停卖不出 {stock} 现价{t_price:.2f}=跌停价")
+                continue
             # ① 原逻辑：昨冲高过上轨、今回落 → 反弹结束清仓
             if y_price > y_up and t_price < t_up:
                 order_target(stock, 0)
@@ -122,6 +137,11 @@ def check_signals(context):
         not_crash = pct > -0.08                               # 今日没暴跌8%
 
         if bounced and wide_enough and not_crash:
+            # D6: 涨停不追买——现价打到涨停价，排队买不到，跳过并计数
+            if t_price >= current_data[stock].high_limit:
+                g.blocked_buy += 1
+                log.info(f"🚫 涨停不追买 {stock} 现价{t_price:.2f}=涨停价")
+                continue
             # ★ 修复bug⑤：目标市值取"总资产30%"与"可用现金"的较小者
             buy_cash = min(context.portfolio.total_value * POSITION_RATIO,
                            context.portfolio.available_cash)
