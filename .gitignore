@@ -30,3 +30,6 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# 中间产物（截图AI解读，含账号信息，不公开）
+image-understanding/
