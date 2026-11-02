@@ -51,8 +51,11 @@ def initialize(context):
         open_tax=0, close_tax=0.0005,
         open_commission=0.0003, close_commission=0.0003,
         min_commission=5), type='stock')
-    # 滑点：市价单按成交价0.2%滑（原AI版没设，默认0滑点是假回测）
-    set_slippage(FixedSlippage(0.002))
+    # 滑点：按价格的0.2%计（D5自查发现v1/v2初版都写错了：
+    # FixedSlippage(0.002) 的含义是"每股固定滑0.002元"——
+    # 对43元的股票等于0.005%滑点，约等于没有，是假回测。
+    # PriceRelatedSlippage(0.002) 才是"价格的0.2%"：买贵0.1%、卖便宜0.1%）
+    set_slippage(PriceRelatedSlippage(0.002))
 
     # ★ 修复bug①：注册每日14:55定时任务，这行必须生效
     run_daily(check_signals, time='14:55')
